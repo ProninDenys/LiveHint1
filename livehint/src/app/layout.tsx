@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header"; // ✅ Подключаем клиентский компонент хедера
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,25 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 min-h-screen`}> 
-        {/* 🔹 NAVIGATION HEADER */}
-        <header className="bg-white bg-opacity-20 text-white shadow-md py-4">
-          <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-            {/* LOGO */}
-            <h1 className="text-2xl font-bold tracking-wide">
-              LiveHint <span className="text-gray-200">AI</span>
-            </h1>
-
-            {/* NAVIGATION LINKS */}
-            <nav className="space-x-6 flex">
-              <a href="/" className="hover:text-gray-300 transition">Home</a>
-              <a href="/auth/login" className="hover:text-gray-300 transition">Login</a>
-              <a href="/auth/register" className="hover:text-gray-300 transition">Register</a>
-            </nav>
-          </div>
-        </header>
+        {/* ✅ Вставляем компонент Header */}
+        <Header />
 
         {/* 🔹 PAGE CONTENT */}
-        <main className="flex flex-col items-center justify-center min-h-screen p-6">{children}</main>
+        <main className="flex flex-col items-center justify-center min-h-screen p-6">
+          {children}
+        </main>
       </body>
     </html>
   );

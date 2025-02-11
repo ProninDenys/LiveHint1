@@ -1,15 +1,30 @@
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, 
+  dangerouslyAllowBrowser: true, 
+});
+
+let requestCount = 0;
+const MAX_REQUESTS_PER_MINUTE = 3;
+
 export const getAIResponse = async (prompt: string) => {
+  if (requestCount >= MAX_REQUESTS_PER_MINUTE) {
+    return "⚠️ Too many requests! Try again later.";
+  }
+
+  requestCount++;
+  setTimeout(() => requestCount--, 60000); // Каждую минуту сбрасываем счетчик
+
   try {
-    const res = await fetch("/api/openai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
     });
 
-    const data = await res.json();
-    return data.response;
+    return completion.choices[0].message.content;
   } catch (error) {
-    console.error("❌ Fetch API error:", error);
-    return "⚠️ AI response error";
+    console.error("OpenAI API error:", error);
+    return "⚠️ AI response error. Please try again later.";
   }
 };
