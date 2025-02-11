@@ -7,14 +7,10 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen">
-      
-     
-
+    <div className="flex flex-col items-center justify-between min-h-screen p-6">
       {/* КОНТЕНТ */}
       <div className="flex flex-col items-center justify-center text-center mt-20">
         <motion.h1
-        
           className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-purple-300 mb-4"
         >
           LiveHint AI
@@ -53,7 +49,7 @@ export default function HomePage() {
       </div>
 
       {/* ФУТЕР */}
-      <div className="absolute bottom-6 text-gray-600 text-sm">
+      <div className="mt-20 text-gray-600 text-sm text-center">
         © 2025 LiveHint. All rights reserved.
       </div>
     </div>
