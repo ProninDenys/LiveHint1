@@ -7,17 +7,15 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 via-white to-purple-300 text-gray-900">
+    <div className="relative flex flex-col items-center justify-center min-h-screen">
       
      
 
       {/* КОНТЕНТ */}
       <div className="flex flex-col items-center justify-center text-center mt-20">
         <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 mb-4"
+        
+          className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-purple-300 mb-4"
         >
           LiveHint AI
         </motion.h1>

@@ -11,40 +11,45 @@ export default function Login() {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    if (user) router.push("/dashboard"); // ✅ Если уже залогинен – редирект
+    if (user) router.push("/dashboard"); 
   }, []);
 
   const handleLogin = () => {
     const user = localStorage.getItem("user");
     if (!user) {
-      setError("Пользователь не зарегистрирован!");
+      setError("User is not registered!");
       return;
     }
 
-    router.push("/dashboard"); // ✅ Редирект на Dashboard
+    router.push("/dashboard"); 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-4">Вход</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        className="w-1/2 p-2 border rounded-lg mb-2"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Пароль"
-        className="w-1/2 p-2 border rounded-lg mb-2"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleLogin}>
-        Войти
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 border rounded-md mb-3 focus:ring focus:ring-blue-300"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border rounded-md mb-3 focus:ring focus:ring-blue-300"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button 
+          className="w-full bg-blue-500 text-white px-4 py-2 rounded-md text-lg font-semibold hover:bg-blue-600 transition"
+          onClick={handleLogin}
+        >
+          Sign In
+        </button>
+        {error && <p className="text-red-500 mt-3 text-center">{error}</p>}
+      </div>
     </div>
   );
 }
