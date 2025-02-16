@@ -18,6 +18,7 @@ export default function Dashboard() {
   const recognitionRef = useRef<any>(null);
   const router = useRouter();
 
+  // Load user data and chat history
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (!userData) {
@@ -25,18 +26,46 @@ export default function Dashboard() {
     } else {
       setUser(JSON.parse(userData));
     }
-
     const savedHistory = localStorage.getItem("chatHistory");
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
     }
-  }, []);
+  }, [router]);
+
+  // Setup Speech Recognition
+  useEffect(() => {
+    if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
+      console.error("Speech Recognition is not supported in this browser. Use Chrome.");
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.lang = language;
+    recognitionRef.current.onresult = (event) => {
+      const lastResult = event.results[event.results.length - 1][0].transcript;
+      setTranscript(lastResult);
+    };
+    recognitionRef.current.onerror = (error) => {
+      console.error("Speech recognition error:", JSON.stringify(error));
+    };
+    
+  }, [language]);
+
+  const startRecording = () => {
+    recognitionRef.current?.start();
+    setIsListening(true);
+  };
+
+  const stopRecording = () => {
+    recognitionRef.current?.stop();
+    setIsListening(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* HEADER */}
-      <header className="w-full  shadow-md p-4 flex justify-between items-center">
-        
+      <header className="w-full shadow-md p-4 flex justify-between items-center">
         <button
           className="bg-red-500 text-white px-4 py-2 rounded flex items-center gap-2 shadow hover:bg-red-600 transition"
           onClick={() => {
@@ -50,7 +79,7 @@ export default function Dashboard() {
       </header>
 
       {/* MAIN CONTENT */}
-      <div className="max-w-4xl mx-auto text-center p-6  text-gray-900 rounded shadow-lg mt-10">
+      <div className="max-w-4xl mx-auto text-center p-6 text-gray-900 rounded shadow-lg mt-10">
         <h2 className="text-xl font-semibold mb-4">Welcome, {user?.email}!</h2>
 
         {/* LANGUAGE SELECTOR */}
@@ -72,6 +101,7 @@ export default function Dashboard() {
         {/* VOICE CONTROL BUTTONS */}
         <div className="flex space-x-6 justify-center mb-6">
           <button
+            onClick={startRecording}
             className={`px-6 py-3 rounded flex items-center gap-2 text-lg font-semibold shadow ${
               isListening ? "bg-red-500 hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"
             } transition`}
@@ -79,13 +109,18 @@ export default function Dashboard() {
             <FiMic />
             {isListening ? "Listening..." : "Start Recording"}
           </button>
-
           <button
+            onClick={stopRecording}
             className="px-6 py-3 bg-red-500 text-white rounded flex items-center gap-2 text-lg font-semibold shadow hover:bg-red-600 transition"
           >
             <FiMicOff />
             Stop Recording
           </button>
+        </div>
+
+        {/* Transcript Display */}
+        <div className="mb-6">
+          <p className="text-lg">Transcript: {transcript || "Waiting for speech..."}</p>
         </div>
 
         {/* CHAT HISTORY */}
@@ -101,7 +136,10 @@ export default function Dashboard() {
                 transition={{ duration: 0.4 }}
               >
                 <p className="font-semibold">You: {item.text}</p>
-                <p>AI: {loading ? <FiLoader className="animate-spin inline-block" /> : item.ai}</p>
+                <p>
+                  AI:{" "}
+                  {loading ? <FiLoader className="animate-spin inline-block" /> : item.ai}
+                </p>
               </motion.div>
             ))}
           </div>
